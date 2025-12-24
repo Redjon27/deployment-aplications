@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: devops-tech-challenge-envs
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+            valuesFile: environments/dev/values.yaml
+          - env: test
+            namespace: test
+            valuesFile: environments/test/values.yaml
+          - env: prod
+            namespace: prod
+            valuesFile: environments/prod/values.yaml
+
+  template:
+    metadata:
+      name: devops-tech-challenge-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:Redjon27/deployment-aplications.git
+        targetRevision: main
+        path: charts/devops-tech-challenge-wrapper
+        helm:
+          releaseName: devops-tech-challenge-{{env}}
+          valueFiles:
+            - "{{valuesFile}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true

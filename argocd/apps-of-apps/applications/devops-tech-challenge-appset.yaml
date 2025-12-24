@@ -13,9 +13,9 @@ spec:
           - env: test
             namespace: test
             valuesFile: environments/test/values.yaml
-          - env: prod
-            namespace: prod
-            valuesFile: environments/prod/values.yaml
+          # - env: prod
+          #   namespace: prod
+          #   valuesFile: environments/prod/values.yaml
 
   template:
     metadata:

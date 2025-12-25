@@ -27,7 +27,7 @@ projects: {}
 
 applications:
   devops-tech-challenge:
-    enabled: false
+    enabled: true
     destination: {}
     source:
       path: "devops-tech-challenge"

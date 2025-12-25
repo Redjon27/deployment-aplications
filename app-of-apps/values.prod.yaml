@@ -2,5 +2,5 @@ envName: prod
 
 applications:
   devops-tech-challenge:
-    enabled: true
+    enabled: false
 

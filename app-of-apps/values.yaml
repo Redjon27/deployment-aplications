@@ -20,6 +20,6 @@ applications:
     enabled:
       dev: true
       test: true
-      prod: false
+      prod: true
     source:
       path: "devops-tech-challenge"

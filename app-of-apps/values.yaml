@@ -1,33 +1,25 @@
-# your override should supply an envName
-envName: null
-
-# if set, override all Applications to use this project
 projectOverride: null
 
 default:
-  project:
-    destinations: |
-      - namespace: {{ tpl $.Values.default.app.destination.namespace $ | required "Missing proj dest namespace"}}
-        server: {{ tpl $.Values.default.app.destination.server $ | required "Missing proj dest server" }}
   app:
     enableAutoSync: true
     autoSyncPrune: true
+    autoSelfHeal: true
+
     destination:
       server: "https://kubernetes.default.svc"
+
     project: "default"
+
     source:
       repoURL: git@github.com:Redjon27/deployment-aplications.git
       targetRevision: main
-      extraSourceFields: |
-        helm:
-          valueFiles:
-          - values.{{ $.Values.envName }}.yaml
-
-projects: {}
 
 applications:
   devops-tech-challenge:
-    enabled: true
-    destination: {}
+    enabled:
+      dev: true
+      test: true
+      prod: false
     source:
       path: "devops-tech-challenge"

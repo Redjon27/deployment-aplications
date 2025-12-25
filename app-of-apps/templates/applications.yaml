@@ -1,0 +1,31 @@
+{{- $env := required "envName is required" .Values.envName -}}
+{{- range $name, $app := .Values.applications }}
+{{- if $app.enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ printf "%s-%s" $env $name | trunc 63 | trimSuffix "-" }}
+  namespace: argocd
+spec:
+  project: {{ $.Values.defaults.project | quote }}
+  destination:
+    server: {{ $.Values.defaults.destinationServer | quote }}
+    namespace: {{ required (printf "namespace is required for %s" $name) $app.namespace | quote }}
+  source:
+    repoURL: {{ $.Values.defaults.repoURL | quote }}
+    targetRevision: {{ $.Values.defaults.targetRevision | quote }}
+    path: {{ required (printf "path is required for %s" $name) $app.path | quote }}
+    helm:
+      releaseName: {{ printf "%s-%s" $env $name | trunc 53 | trimSuffix "-" }}
+      valueFiles:
+        - {{ required (printf "valuesFile is required for %s" $name) $app.valuesFile | quote }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+{{- end }}
+{{- end }}

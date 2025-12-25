@@ -1,0 +1,16 @@
+devops-tech-challenge:
+  app:
+    replicaCount: 2
+    image:
+      repository: trial29e6cp.jfrog.io/docker-trial/devops-tech-challenge-app
+      tag: "docker-4414e58b"
+    env:
+      NODE_ENV: "production"
+      APP_PORT: "3000"
+      MONGO_DB: "visitsdb_prod"
+      MONGODB_URI: "mongodb://root:rootpass@mongo:27017/visitsdb_prod?authSource=admin"
+
+  ingress:
+    enabled: true
+    className: nginx
+    host: "prod.3.123.115.73.nip.io"

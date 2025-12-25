@@ -1,0 +1,8 @@
+envName: dev
+
+applications:
+  devops-tech-challenge:
+    enabled: true
+    namespace: dev
+    path: devops-tech-challenge
+    valuesFile: values.dev.yaml

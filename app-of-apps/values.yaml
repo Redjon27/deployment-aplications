@@ -1,0 +1,9 @@
+envName: null
+
+defaults:
+  repoURL: git@github.com:Redjon27/deployment-aplications.git
+  targetRevision: main
+  destinationServer: https://kubernetes.default.svc
+  project: default
+
+applications: {}

@@ -3,6 +3,4 @@ envName: prod
 applications:
   devops-tech-challenge:
     enabled: false   # p.sh e lëmë off derisa ta duam
-    namespace: prod
-    path: devops-tech-challenge
-    valuesFile: values.prod.yaml
+

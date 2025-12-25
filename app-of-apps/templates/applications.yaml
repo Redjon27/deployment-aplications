@@ -1,31 +1,41 @@
-{{- $env := required "envName is required" .Values.envName -}}
-{{- range $name, $app := .Values.applications }}
-{{- if $app.enabled }}
+{{- $envs := .Values.environments | default (list "dev") -}}
+
+{{- range $env := $envs }}
+  {{- $_ := set $ "curEnv" $env }}
+
+  {{- range $key, $val := $.Values.applications }}
+    {{- if $val.enabled }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-%s" $env $name | trunc 63 | trimSuffix "-" }}
+  name: {{ $env }}-{{ $key }}
   namespace: argocd
 spec:
-  project: {{ $.Values.defaults.project | quote }}
   destination:
-    server: {{ $.Values.defaults.destinationServer | quote }}
-    namespace: {{ required (printf "namespace is required for %s" $name) $app.namespace | quote }}
-  source:
-    repoURL: {{ $.Values.defaults.repoURL | quote }}
-    targetRevision: {{ $.Values.defaults.targetRevision | quote }}
-    path: {{ required (printf "path is required for %s" $name) $app.path | quote }}
-    helm:
-      releaseName: {{ printf "%s-%s" $env $name | trunc 53 | trimSuffix "-" }}
-      valueFiles:
-        - {{ required (printf "valuesFile is required for %s" $name) $app.valuesFile | quote }}
+    namespace: {{ $env }}
+    server: {{ $.Values.default.app.destination.server | quote }}
+
+  project: {{ $.Values.projectOverride | default $.Values.default.app.project | quote }}
+
+  {{- if $val.enableAutoSync | default $.Values.default.app.enableAutoSync }}
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
+      prune: {{ $val.autoSyncPrune | default $.Values.default.app.autoSyncPrune | default true }}
+      selfHeal: {{ $val.autoSelfHeal | default $.Values.default.app.autoSelfHeal | default true }}
+  {{- end }}
+
+  source:
+    repoURL: {{ $val.source.repoURL | default $.Values.default.app.source.repoURL | quote }}
+    targetRevision: {{ $val.source.targetRevision | default $.Values.default.app.source.targetRevision | quote }}
+    path: {{ $val.source.path | required (printf "No source.path specified for %s" $key) | quote }}
+
+{{- if $val.source.extraSourceFields }}
+{{ tpl $val.source.extraSourceFields $ | indent 4 }}
+{{- else if $.Values.default.app.source.extraSourceFields }}
+{{ tpl $.Values.default.app.source.extraSourceFields $ | indent 4 }}
 {{- end }}
+
+    {{- end }}
+  {{- end }}
 {{- end }}

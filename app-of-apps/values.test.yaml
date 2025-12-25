@@ -3,6 +3,3 @@ envName: test
 applications:
   devops-tech-challenge:
     enabled: true
-    namespace: test
-    path: devops-tech-challenge
-    valuesFile: values.test.yaml

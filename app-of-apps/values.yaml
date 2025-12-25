@@ -1,9 +1,32 @@
-envName: null
+projectOverride: null
 
-defaults:
-  repoURL: git@github.com:Redjon27/deployment-aplications.git
-  targetRevision: main
-  destinationServer: https://kubernetes.default.svc
-  project: default
+default:
+  app:
+    enableAutoSync: true
+    autoSyncPrune: true
+    autoSelfHeal: true
 
-applications: {}
+    destination:
+      server: "https://kubernetes.default.svc"
+
+    project: "default"
+
+    source:
+      repoURL: git@github.com:Redjon27/deployment-aplications.git
+      targetRevision: main
+
+      extraSourceFields: |
+        helm:
+          valueFiles:
+            - values.{{ $.curEnv }}.yaml
+
+environments:
+  - dev
+  - test
+  - prod
+
+applications:
+  devops-tech-challenge:
+    enabled: true
+    source:
+      path: "devops-tech-challenge"

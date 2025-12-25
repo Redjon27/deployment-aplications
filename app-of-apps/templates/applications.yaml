@@ -1,11 +1,7 @@
-{{- $envs := required "environments is required" .Values.environments -}}
-
-{{- range $env, $envCfg := $envs }}
-  {{- range $appName, $appCfg := $.Values.applications }}
-
-    {{- $enabled := index $appCfg.enabled $env | default false -}}
-    {{- if $enabled }}
-
+{{- range $appName, $appCfg := .Values.applications }}
+  {{- $enabledMap := $appCfg.enabled | default dict -}}
+  {{- range $env, $flag := $enabledMap }}
+    {{- if $flag }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -14,10 +10,10 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: {{ $appCfg.destination.namespace | default $envCfg.namespace | quote }}
-    server: {{ $appCfg.destination.server | default $.Values.default.app.destination.server | quote }}
+    namespace: {{ $env | quote }}
+    server: {{ $.Values.default.app.destination.server | quote }}
 
-  project: {{ $.Values.projectOverride | default $appCfg.project | default $.Values.default.app.project | quote }}
+  project: {{ $.Values.projectOverride | default $.Values.default.app.project | quote }}
 
   {{- if $appCfg.enableAutoSync | default $.Values.default.app.enableAutoSync }}
   syncPolicy:
@@ -29,14 +25,10 @@ spec:
   source:
     repoURL: {{ $appCfg.source.repoURL | default $.Values.default.app.source.repoURL | quote }}
     targetRevision: {{ $appCfg.source.targetRevision | default $.Values.default.app.source.targetRevision | quote }}
-    path: {{ required (printf "No source.path specified for %s" $appName) $appCfg.source.path | quote }}
-
-{{- if $appCfg.source.extraSourceFields }}
-{{ tpl $appCfg.source.extraSourceFields (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "Capabilities" $.Capabilities "Template" $.Template "env" $env "envCfg" $envCfg "appName" $appName "appCfg" $appCfg) | indent 4 }}
-{{- else if $.Values.default.app.source.extraSourceFields }}
-{{ tpl $.Values.default.app.source.extraSourceFields (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "Capabilities" $.Capabilities "Template" $.Template "env" $env "envCfg" $envCfg "appName" $appName "appCfg" $appCfg) | indent 4 }}
-{{- end }}
-
+    path: {{ required (printf "applications.%s.source.path is required" $appName) $appCfg.source.path | quote }}
+    helm:
+      valueFiles:
+        - {{ printf "values.%s.yaml" $env | quote }}
     {{- end }}
   {{- end }}
 {{- end }}

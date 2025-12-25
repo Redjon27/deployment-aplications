@@ -14,27 +14,12 @@ default:
     source:
       repoURL: git@github.com:Redjon27/deployment-aplications.git
       targetRevision: main
-      extraSourceFields: |
-        helm:
-          valueFiles:
-            - environments/{{ $env }}/values.yaml
-
-environments:
-  dev:
-    namespace: dev
-  test:
-    namespace: test
-  prod:
-    namespace: prod
 
 applications:
   devops-tech-challenge:
-    # enabled PER ENV (kjo e zgjidh komplet “prod false”)
     enabled:
       dev: true
       test: true
       prod: false
-
-    destination: {}   # optional overrides
     source:
-      path: "charts/devops-tech-challenge-wrapper"
+      path: "devops-tech-challenge"

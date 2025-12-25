@@ -2,5 +2,5 @@ envName: prod
 
 applications:
   devops-tech-challenge:
-    enabled: false   # p.sh e lëmë off derisa ta duam
+    enabled: false
 

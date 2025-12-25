@@ -20,11 +20,6 @@ default:
           valueFiles:
             - values.{{ $.curEnv }}.yaml
 
-environments:
-  - dev
-  - test
-  - prod
-
 applications:
   devops-tech-challenge:
     enabled: true

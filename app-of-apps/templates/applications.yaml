@@ -1,36 +1,42 @@
-{{- $env := required "envName is required" .Values.envName -}}
+{{- $envs := required "environments is required" .Values.environments -}}
 
-{{- range $key, $val := .Values.applications }}
-  {{- if $val.enabled }}
+{{- range $env, $envCfg := $envs }}
+  {{- range $appName, $appCfg := $.Values.applications }}
+
+    {{- $enabled := index $appCfg.enabled $env | default false -}}
+    {{- if $enabled }}
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $env }}-{{ $key }}
+  name: {{ $env }}-{{ $appName }}
   namespace: argocd
 spec:
   destination:
-    namespace: {{ $val.destination.namespace | default $env | quote }}
-    server: {{ $val.destination.server | default $.Values.default.app.destination.server | quote }}
+    namespace: {{ $appCfg.destination.namespace | default $envCfg.namespace | quote }}
+    server: {{ $appCfg.destination.server | default $.Values.default.app.destination.server | quote }}
 
-  project: {{ $.Values.projectOverride | default $val.project | default $.Values.default.app.project | quote }}
+  project: {{ $.Values.projectOverride | default $appCfg.project | default $.Values.default.app.project | quote }}
 
-  {{- if $val.enableAutoSync | default $.Values.default.app.enableAutoSync }}
+  {{- if $appCfg.enableAutoSync | default $.Values.default.app.enableAutoSync }}
   syncPolicy:
     automated:
-      prune: {{ $val.autoSyncPrune | default $.Values.default.app.autoSyncPrune | default true }}
-      selfHeal: {{ $val.autoSelfHeal | default $.Values.default.app.autoSelfHeal | default true }}
+      prune: {{ $appCfg.autoSyncPrune | default $.Values.default.app.autoSyncPrune | default true }}
+      selfHeal: {{ $appCfg.autoSelfHeal | default $.Values.default.app.autoSelfHeal | default true }}
   {{- end }}
 
   source:
-    repoURL: {{ $val.source.repoURL | default $.Values.default.app.source.repoURL | quote }}
-    targetRevision: {{ $val.source.targetRevision | default $.Values.default.app.source.targetRevision | quote }}
-    path: {{ required (printf "No source.path specified for %s" $key) $val.source.path | quote }}
+    repoURL: {{ $appCfg.source.repoURL | default $.Values.default.app.source.repoURL | quote }}
+    targetRevision: {{ $appCfg.source.targetRevision | default $.Values.default.app.source.targetRevision | quote }}
+    path: {{ required (printf "No source.path specified for %s" $appName) $appCfg.source.path | quote }}
 
-{{- if $val.source.extraSourceFields }}
-{{ tpl $val.source.extraSourceFields $ | indent 4 }}
+{{- if $appCfg.source.extraSourceFields }}
+{{ tpl $appCfg.source.extraSourceFields (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "Capabilities" $.Capabilities "Template" $.Template "env" $env "envCfg" $envCfg "appName" $appName "appCfg" $appCfg) | indent 4 }}
 {{- else if $.Values.default.app.source.extraSourceFields }}
-{{ tpl $.Values.default.app.source.extraSourceFields $ | indent 4 }}
+{{ tpl $.Values.default.app.source.extraSourceFields (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "Capabilities" $.Capabilities "Template" $.Template "env" $env "envCfg" $envCfg "appName" $appName "appCfg" $appCfg) | indent 4 }}
 {{- end }}
+
+    {{- end }}
   {{- end }}
 {{- end }}

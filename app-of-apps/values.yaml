@@ -1,4 +1,3 @@
-envName: null
 projectOverride: null
 
 default:
@@ -6,23 +5,36 @@ default:
     enableAutoSync: true
     autoSyncPrune: true
     autoSelfHeal: true
+
     destination:
       server: "https://kubernetes.default.svc"
+
     project: "default"
+
     source:
       repoURL: git@github.com:Redjon27/deployment-aplications.git
       targetRevision: main
       extraSourceFields: |
         helm:
           valueFiles:
-            - values.{{ .Values.envName }}.yaml
+            - environments/{{ $env }}/values.yaml
+
+environments:
+  dev:
+    namespace: dev
+  test:
+    namespace: test
+  prod:
+    namespace: prod
 
 applications:
   devops-tech-challenge:
-    enabled: false
-    destination: {}
+    # enabled PER ENV (kjo e zgjidh komplet “prod false”)
+    enabled:
+      dev: true
+      test: true
+      prod: false
+
+    destination: {}   # optional overrides
     source:
-      path: "devops-tech-challenge"
-    enableAutoSync: true
-    autoSyncPrune: true
-    
+      path: "charts/devops-tech-challenge-wrapper"

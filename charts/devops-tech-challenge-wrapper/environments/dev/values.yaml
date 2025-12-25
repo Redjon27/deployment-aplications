@@ -2,16 +2,33 @@ devops-tech-challenge:
   app:
     image:
       repository: trial29e6cp.jfrog.io/docker-trial/devops-tech-challenge-app
+<<<<<<< HEAD
       tag: "docker-0d7e523e"
+=======
+      tag: "docker-4414e58b"
+
+>>>>>>> d8cba7e (chore(helm): vendor devops-tech-challenge 0.1.0)
     env:
       NODE_ENV: "development"
       MONGO_DB: "visitsdb_dev"
       MONGODB_URI: "mongodb://root:rootpass@mongo:27017/visitsdb_dev?authSource=admin"
-  mongo:
-    database: "visitsdb_dev"
+
+    configMap:
+      enabled: true
+      data:
+        LOG_LEVEL: "debug"
+
+    secret:
+      enabled: false
+      stringData: {}
+
   ingress:
     enabled: true
     className: nginx
     host: "dev.3.123.115.73.nip.io"
     path: /
     pathType: Prefix
+
+  mongo:
+    enabled: true
+    database: "visitsdb_dev"

@@ -1,8 +1,10 @@
 devops-tech-challenge:
   app:
+    replicaCount: 2
     image:
       repository: trial29e6cp.jfrog.io/docker-trial/devops-tech-challenge-app
       tag: "docker-4414e58b"
+
     env:
       NODE_ENV: "production"
       MONGO_DB: "visitsdb_prod"
@@ -12,6 +14,9 @@ devops-tech-challenge:
     enabled: true
     className: nginx
     host: "prod.3.123.115.73.nip.io"
+    path: /
+    pathType: Prefix
 
   mongo:
+    enabled: true
     database: "visitsdb_prod"

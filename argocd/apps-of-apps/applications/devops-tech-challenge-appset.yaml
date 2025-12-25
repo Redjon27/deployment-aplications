@@ -26,8 +26,6 @@ spec:
         repoURL: git@github.com:Redjon27/deployment-aplications.git
         targetRevision: main
         path: charts/devops-tech-challenge-wrapper
-        valueFiles:
-          - "{{valuesFile}}"
         helm:
           releaseName: devops-tech-challenge-{{env}}
           valueFiles:
@@ -42,3 +40,7 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
+          - Validate=true
+          - Replace=true
+          - PruneLast=true
+          

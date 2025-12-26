@@ -23,3 +23,11 @@ applications:
       prod: false
     source:
       path: "devops-tech-challenge"
+
+monitoring:
+  enabled:
+    dev: true
+    test: true
+    prod: true
+  source:
+    path: "monitoring"

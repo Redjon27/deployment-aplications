@@ -24,10 +24,10 @@ applications:
     source:
       path: "devops-tech-challenge"
 
-monitoring:
-  enabled:
-    dev: true
-    test: true
-    prod: true
-  source:
-    path: "monitoring"
+  monitoring:
+    enabled:
+      dev: true
+      test: true
+      prod: true
+    source:
+      path: "monitoring"

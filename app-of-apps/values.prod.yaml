@@ -4,3 +4,5 @@ applications:
   devops-tech-challenge:
     enabled: false
 
+  monitoring:
+    enabled: false

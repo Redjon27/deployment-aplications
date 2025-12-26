@@ -19,7 +19,7 @@ applications:
   devops-tech-challenge:
     enabled:
       dev: true
-      test: true
+      test: false
       prod: false
     source:
       path: "devops-tech-challenge"
@@ -27,7 +27,7 @@ applications:
   monitoring:
     enabled:
       dev: true
-      test: true
+      test: false
       prod: false
     source:
       path: "monitoring"

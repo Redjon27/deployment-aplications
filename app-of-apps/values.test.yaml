@@ -2,7 +2,7 @@ envName: test
 
 applications:
   devops-tech-challenge:
-    enabled: true
+    enabled: false
 
   monitoring:
-    enabled: true
+    enabled: false

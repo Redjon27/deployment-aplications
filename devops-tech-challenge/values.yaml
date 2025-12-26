@@ -1,1 +1,6 @@
-devops-tech-challenge: {}
+devops-tech-challenge:
+  app:
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "3000"

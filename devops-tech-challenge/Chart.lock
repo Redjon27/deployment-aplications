@@ -1,6 +1,6 @@
 dependencies:
 - name: devops-tech-challenge
   repository: oci://trial29e6cp.jfrog.io/docker-trial
-  version: 0.1.1
-digest: sha256:771c3bfc0835fb61dfcd31116638b855eb577792d8edb5194bac98fe0a7100b2
-generated: "2025-12-25T14:40:17.048181+01:00"
+  version: 0.1.2
+digest: sha256:bb9c3da17ad7faec8b246f2a53eb817893424b4932ea65d3297f3abb7fcb4e53
+generated: "2025-12-26T15:06:10.725002+01:00"

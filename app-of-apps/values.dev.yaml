@@ -3,6 +3,3 @@ envName: dev
 applications:
   devops-tech-challenge:
     enabled: true
-
-  monitoring:
-    enabled: true

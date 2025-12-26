@@ -1,8 +1,0 @@
-prometheus:
-  server:
-    extraScrapeConfigs:
-      - job_name: "devops-tech-challenge"
-        metrics_path: /metrics
-        static_configs:
-          - targets:
-              - devops-tech-challenge.test.svc.cluster.local:3000

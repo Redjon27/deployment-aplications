@@ -2,7 +2,7 @@ devops-tech-challenge:
   app:
     image:
       repository: trial29e6cp.jfrog.io/docker-trial/devops-tech-challenge-app
-      tag: "docker-2bfceb53"
+      tag: "docker-945968cb"
     env:
       NODE_ENV: "development"
       APP_PORT: "3000"
